@@ -56,7 +56,7 @@ def attr_to_str(object, attr):
             return str(list(value.keys()))
         else:
             return str(value)
-    return None
+    return ""
 
 @napari_hook_implementation
 def napari_experimental_provide_dock_widget():

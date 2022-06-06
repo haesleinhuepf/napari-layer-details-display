@@ -53,7 +53,7 @@ def attr_to_str(object, attr):
     if hasattr(object, attr):
         value = getattr(object, attr)
         if isinstance(value, dict):
-            return str(list(value.keys()))
+            return "<br/>&nbsp;-&nbsp;" + str(list(value.keys())).replace(",", "<br/>&nbsp;-&nbsp;")
         else:
             return str(value)
     return ""

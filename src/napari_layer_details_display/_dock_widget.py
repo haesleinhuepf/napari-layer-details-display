@@ -25,10 +25,10 @@ class LayerDetailsDisplay(QMainWindow):
 
         self.contents = QWidget()
 
-        # self.contents.setAlignment(AlignTop)
         self.scrollArea.setWidget(self.contents)
         self.scrollArea.setWidget(self.contents)
         self.layout = QVBoxLayout(self.contents)
+        self.layout.setAlignment(Qt.AlignTop)
 
         self.layout.addWidget(self.text)
 

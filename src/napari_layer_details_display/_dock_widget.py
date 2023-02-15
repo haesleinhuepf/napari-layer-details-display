@@ -1,10 +1,10 @@
 from napari_plugin_engine import napari_hook_implementation
-from qtpy.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel
-from magicgui import magic_factory
+from qtpy.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMainWindow, QScrollArea
+from qtpy.QtCore import Qt
 from napari_tools_menu import register_dock_widget
 
 @register_dock_widget(menu = "Utilities > Layer Details")
-class LayerDetailsDisplay(QWidget):
+class LayerDetailsDisplay(QMainWindow):
     # your QWidget.__init__ can optionally request the napari viewer instance
     # in one of two ways:
     # 1. use a parameter called `napari_viewer`, as done here
@@ -14,13 +14,27 @@ class LayerDetailsDisplay(QWidget):
         self.viewer = napari_viewer
 
         self.text = QLabel("")
+        self.text.setWordWrap(True)
 
-        self.setLayout(QVBoxLayout())
-        self.layout().addWidget(self.text)
+        # create a scroll area
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # disable horizontal scroll bar
+        self.scrollArea.setMinimumWidth(400)
+        self.setCentralWidget(self.scrollArea)
+        self.scrollArea.setWidgetResizable(True)
+
+        self.contents = QWidget()
+
+        # self.contents.setAlignment(AlignTop)
+        self.scrollArea.setWidget(self.contents)
+        self.scrollArea.setWidget(self.contents)
+        self.layout = QVBoxLayout(self.contents)
+
+        self.layout.addWidget(self.text)
 
         btn = QPushButton("Refresh")
         btn.clicked.connect(self._on_selection)
-        self.layout().addWidget(btn)
+        self.layout.addWidget(btn)
 
         napari_viewer.layers.selection.events.changed.connect(self._on_selection)
 
@@ -53,7 +67,7 @@ def attr_to_str(object, attr):
     if hasattr(object, attr):
         value = getattr(object, attr)
         if isinstance(value, dict):
-            return "<br/>&nbsp;-&nbsp;" + str(list(value.keys())).replace(",", "<br/>&nbsp;-&nbsp;")
+            return "<br/>&nbsp;-&nbsp;" + str(list(zip(value.keys(), value.values()))).replace("(", "").replace("),", "<br/>&nbsp;-&nbsp;").replace(",", ": ")
         else:
             return str(value)
     return ""

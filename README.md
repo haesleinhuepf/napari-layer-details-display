@@ -21,7 +21,7 @@ You can install `napari-layer-details-display` via [pip]:
 
     pip install napari-layer-details-display
 
-
+Note: This plugin is not compatible with napari 0.6.0 and later.
 
 To install latest development version :
 
